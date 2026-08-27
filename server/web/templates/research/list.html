@@ -1,0 +1,37 @@
+{{define "title"}}Research — JobHub{{end}}
+{{define "content"}}
+
+<div class="section-title">Company Research <span class="count">({{len .Research}})</span></div>
+
+{{if .Research}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Stability</th>
+        <th>Salary Range</th>
+        <th>Remote</th>
+        <th>Researched</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Research}}
+      <tr>
+        <td>{{.Company}}</td>
+        <td><span class="badge badge-stability {{.StabilityRating}}">{{.StabilityRating}}</span></td>
+        <td class="salary">{{.SalaryRange}}</td>
+        <td>{{.Remote}}</td>
+        <td>{{.ResearchedDate}}</td>
+        <td><a href="/research/{{.ID}}">View →</a></td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No company research yet.</div>
+{{end}}
+
+{{end}}

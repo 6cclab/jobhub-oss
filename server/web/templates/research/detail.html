@@ -1,0 +1,58 @@
+{{define "title"}}{{.Research.Company}} Research — JobHub{{end}}
+{{define "content"}}
+
+<div class="layout-grid">
+  <div class="main-col">
+    <div class="hero">
+      <div class="eyebrow">Company Research</div>
+      <h1>{{.Research.Company}}</h1>
+      <div class="meta">
+        <span>Researched {{.Research.ResearchedDate}}</span>
+      </div>
+    </div>
+
+    <div class="prose-section">
+      {{.Research.RenderedMarkdown}}
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <h3>Company Overview</h3>
+      <div class="kv-row"><span class="k">Stage</span><span class="v">{{.Research.Stage}}</span></div>
+      <div class="kv-row"><span class="k">Headcount</span><span class="v">{{.Research.Headcount}}</span></div>
+      <div class="kv-row"><span class="k">Founded</span><span class="v">{{.Research.Founded}}</span></div>
+      <div class="kv-row"><span class="k">Remote</span><span class="v">{{.Research.Remote}}</span></div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Stability</h3>
+      <span class="badge badge-stability {{.Research.StabilityRating}}">{{.Research.StabilityRating}}</span>
+      <p>{{.Research.StabilityNotes}}</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Compensation</h3>
+      <div class="salary-large">{{.Research.SalaryRange}}</div>
+      <div class="kv-row"><span class="k">Source</span><span class="v">{{.Research.SalarySource}}</span></div>
+      <div class="kv-row"><span class="k">Total Comp</span><span class="v">{{.Research.TotalComp}}</span></div>
+      <div class="kv-row"><span class="k">vs. Floor</span><span class="v salary {{.Research.VsFloorClass}}">{{.Research.VsFloor}}</span></div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Engineering Culture</h3>
+      <p>{{.Research.EngineeringCulture}}</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Tech Stack</h3>
+      <ul>
+        {{range .Research.TechStack}}
+        <li class="tag">{{.}}</li>
+        {{end}}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{{end}}

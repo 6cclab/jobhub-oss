@@ -1,0 +1,63 @@
+@page {
+  size: letter;
+  margin: 1in;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 11pt;
+  line-height: 1.5;
+  color: #000;
+}
+
+.header {
+  margin-bottom: 8pt;
+}
+
+.header h1 {
+  font-size: 18pt;
+  font-weight: 700;
+  margin-bottom: 2pt;
+}
+
+.header .contact {
+  font-size: 10pt;
+  color: #000;
+}
+
+.header .contact a {
+  color: #000;
+  text-decoration: none;
+}
+
+.header hr {
+  border: none;
+  border-top: 1px solid #b44a1e;
+  margin-top: 6pt;
+}
+
+.date {
+  margin-top: 16pt;
+  margin-bottom: 16pt;
+  font-size: 11pt;
+}
+
+.greeting {
+  margin-bottom: 12pt;
+  font-size: 11pt;
+}
+
+.body p {
+  margin-bottom: 12pt;
+  text-align: justify;
+}
+
+.sign-off {
+  margin-top: 4pt;
+}

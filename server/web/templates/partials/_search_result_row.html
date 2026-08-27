@@ -1,0 +1,9 @@
+{{define "partials/_search_result_row.html"}}
+<tr>
+  <td>{{.Company}}</td>
+  <td><a href="{{.URL}}" target="_blank" rel="noopener">{{.Role}}</a></td>
+  <td class="{{if .IsRemote}}remote{{end}}">{{.Location}}</td>
+  <td class="salary{{if not .SalaryDisclosed}} undisclosed{{end}}{{if .BelowFloor}} below-floor{{end}}">{{.Salary}}</td>
+  <td>{{range .Tags}}<span class="tag">{{.}}</span>{{end}}</td>
+</tr>
+{{end}}

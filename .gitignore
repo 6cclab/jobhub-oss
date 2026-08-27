@@ -1,0 +1,27 @@
+/user/
+.claude/settings.local.json
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.DS_Store
+*.pdf
+
+# Agent scratch: planning/spec output from harness plugins. Working notes, not
+# project documentation — they go stale silently and have no business in a repo
+# other people clone.
+.superpowers/
+superpowers/
+rubber-ducky/
+
+# Generated harness wiring — recreate with scripts/install-harness.sh
+/.gemini/
+/.cursor/
+/.opencode/
+
+# Git worktrees created by agent harnesses
+.claude/worktrees/
+
+# Python bytecode
+__pycache__/
+*.pyc

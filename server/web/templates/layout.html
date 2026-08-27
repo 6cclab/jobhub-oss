@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{block "title" .Data}}JobHub{{end}}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="nav-brand" href="/">JobHub</a>
+      <a class="nav-link{{if eq .CurrentPath "/"}} active{{end}}" href="/">Dashboard</a>
+      <a class="nav-link{{if eq .CurrentPath "/fit-reports"}} active{{end}}" href="/fit-reports">Fit Reports</a>
+      <a class="nav-link{{if eq .CurrentPath "/search-results"}} active{{end}}" href="/search-results">Search Results</a>
+      <a class="nav-link{{if eq .CurrentPath "/applications"}} active{{end}}" href="/applications">Applications</a>
+      <a class="nav-link{{if eq .CurrentPath "/research"}} active{{end}}" href="/research">Research</a>
+      <a class="nav-link{{if eq .CurrentPath "/boards"}} active{{end}}" href="/boards">Boards</a>
+      <a class="nav-link{{if eq .CurrentPath "/eval-results"}} active{{end}}" href="/eval-results">Evals</a>
+    </div>
+  </nav>
+  <main class="container">
+    {{block "content" .Data}}{{end}}
+  </main>
+  <script src="/static/js/htmx.min.js"></script>
+</body>
+</html>

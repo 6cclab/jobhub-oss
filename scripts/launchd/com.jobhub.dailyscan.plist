@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TEMPLATE. Do not load this file from the repo.
+
+  Copy it to ~/Library/LaunchAgents/, replace every __PLACEHOLDER__, then load.
+  The live copy carries your API token, which is why it lives outside the repo.
+  See scripts/launchd/README.md.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.jobhub.dailyscan</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__REPO__/scripts/run_daily_scan.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <!-- 07:15 local. The scan is ~100 min on its first run (cold backfill of
+         every board) and a few minutes daily after that, since only unseen
+         postings reach the model stage. -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key><integer>7</integer>
+        <key>Minute</key><integer>15</integer>
+    </dict>
+
+    <!-- The laptop is often asleep at 07:15. Without this the run is skipped
+         entirely rather than deferred, and the funnel quietly goes dry. -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>JOBHUB_URL</key>
+        <string>__JOBHUB_URL__</string>
+        <key>JOBHUB_API_TOKEN</key>
+        <string>__JOBHUB_API_TOKEN__</string>
+        <key>OLLAMA_HOST</key>
+        <string>__OLLAMA_HOST__</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:__HOME__/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>__HOME__</string>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>__REPO__/user/search-results/logs/launchd.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>__REPO__/user/search-results/logs/launchd.err.log</string>
+
+    <key>ProcessType</key>
+    <string>Background</string>
+</dict>
+</plist>

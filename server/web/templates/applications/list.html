@@ -1,0 +1,31 @@
+{{define "title"}}Applications — JobHub{{end}}
+{{define "content"}}
+
+<div class="section-title">Applications <span class="count">({{len .Applications}})</span></div>
+
+{{if .Applications}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Source</th>
+        <th>Status</th>
+        <th>Applied Date</th>
+        <th>Resume</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Applications}}
+      {{template "partials/_application_row.html" .}}
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No applications tracked yet.</div>
+{{end}}
+
+{{end}}

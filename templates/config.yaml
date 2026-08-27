@@ -1,0 +1,8 @@
+# User identity — referenced by /job and /job-eval commands
+name: "Jane Doe"
+email: "jane@example.com"
+phone: "555-123-4567"
+location: "City, ST"
+linkedin: "linkedin.com/in/janedoe"
+github: "github.com/janedoe"
+sign_off: "Jane"

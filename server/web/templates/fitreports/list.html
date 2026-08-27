@@ -1,0 +1,35 @@
+{{define "title"}}Fit Reports — JobHub{{end}}
+{{define "content"}}
+
+<div class="section-title">Fit Reports <span class="count">({{len .FitReports}})</span></div>
+
+{{if .FitReports}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Verdict</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .FitReports}}
+      <tr>
+        <td>{{.Company}}</td>
+        <td>{{.Role}}</td>
+        <td><span class="badge badge-verdict {{.Verdict}}">{{.Verdict}}</span></td>
+        <td>{{formatDate .Date}}</td>
+        <td><a href="/fit-reports/{{.ID}}">View →</a></td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No fit reports yet.</div>
+{{end}}
+
+{{end}}
