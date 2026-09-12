@@ -1,0 +1,34 @@
+/user/
+.claude/settings.local.json
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.DS_Store
+*.pdf
+
+# Agent scratch: planning/spec output from harness plugins. Working notes, not
+# project documentation — they go stale silently and have no business in a repo
+# other people clone.
+.superpowers/
+superpowers/
+rubber-ducky/
+
+# Generated harness wiring — recreate with scripts/install-harness.sh
+/.gemini/
+/.cursor/
+/.opencode/
+
+# Git worktrees created by agent harnesses
+.claude/worktrees/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Board list exports: 100+ companies Andre is actively targeting, in machine-
+# readable form. mirror.yaml rsyncs everything except .git and user/, and the
+# scrub gate matches hostnames and keys -- it cannot detect an employer name.
+# This is the funnel's only irreplaceable data; keep it local and back it up
+# outside the repo.
+/server/export/

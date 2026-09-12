@@ -1,0 +1,128 @@
+{{/* NOTE: this template uses the "dict" func to pass multiple values into
+     partials/_fit_signal.html. Register it in Go via template.FuncMap, e.g.:
+
+     funcMap := template.FuncMap{
+       "dict": func(values ...interface{}) (map[string]interface{}, error) {
+         if len(values)%2 != 0 {
+           return nil, fmt.Errorf("dict: odd number of arguments")
+         }
+         d := make(map[string]interface{}, len(values)/2)
+         for i := 0; i < len(values); i += 2 {
+           key, ok := values[i].(string)
+           if !ok {
+             return nil, fmt.Errorf("dict: keys must be strings")
+           }
+           d[key] = values[i+1]
+         }
+         return d, nil
+       },
+     }
+     tmpl := template.New("").Funcs(funcMap)
+*/}}
+{{define "title"}}{{.FitReport.Role}} at {{.FitReport.Company}} — JobHub{{end}}
+{{define "content"}}
+
+<div class="layout-grid">
+  <div class="main-col">
+
+    <div class="hero">
+      <div class="eyebrow">Fit Report</div>
+      <h1>{{.FitReport.Role}}</h1>
+      <div class="company">{{.FitReport.Company}}</div>
+      <div class="meta">
+        <span>{{.FitReport.Location}}</span>
+        <span>{{.FitReport.Level}}</span>
+        <span>{{formatDate .FitReport.Date}}</span>
+      </div>
+    </div>
+
+    <div class="verdict-bar">
+      <span class="badge badge-verdict {{.FitReport.Verdict}}">{{.FitReport.Verdict}}</span>
+      <span class="summary">{{.FitReport.Summary}}</span>
+    </div>
+
+    <div class="section-title">Match Signals <span class="count">({{len .FitReport.MatchSignals}})</span></div>
+    {{if .FitReport.MatchSignals}}
+      {{range .FitReport.MatchSignals}}
+      {{template "partials/_fit_signal.html" (dict "Kind" "match" "Signal" .)}}
+      {{end}}
+    {{else}}
+    <div class="empty-state">No match signals recorded.</div>
+    {{end}}
+
+    <div class="section-title">Gaps <span class="count">({{len .FitReport.Gaps}})</span></div>
+    {{if .FitReport.Gaps}}
+      {{range .FitReport.Gaps}}
+      {{template "partials/_fit_signal.html" (dict "Kind" "gap" "Signal" .)}}
+      {{end}}
+    {{else}}
+    <div class="empty-state">No gaps recorded.</div>
+    {{end}}
+
+    <div class="section-title">Red Flags <span class="count">({{len .FitReport.RedFlags}})</span></div>
+    {{if .FitReport.RedFlags}}
+      {{range .FitReport.RedFlags}}
+      {{template "partials/_fit_signal.html" (dict "Kind" "flag" "Signal" .)}}
+      {{end}}
+    {{else}}
+    <div class="empty-state">No red flags recorded.</div>
+    {{end}}
+
+    <div class="prose-section">
+      <h2>Why This Role</h2>
+      {{safeHTML .FitReport.WhyApply}}
+    </div>
+
+    <footer class="page-footer">
+      <div><a href="{{.FitReport.PostingURL}}" target="_blank" rel="noopener">{{.FitReport.PostingURL}}</a></div>
+      <div>Posted / captured {{formatDate .FitReport.Date}}</div>
+    </footer>
+
+  </div>
+
+  <div class="sidebar">
+    {{if .Research}}
+    <div class="sidebar-card">
+      <h3>Company Overview</h3>
+      <div class="kv-row"><span class="k">Stage</span><span class="v">{{.Research.Stage}}</span></div>
+      <div class="kv-row"><span class="k">Headcount</span><span class="v">{{.Research.Headcount}}</span></div>
+      <div class="kv-row"><span class="k">Founded</span><span class="v">{{.Research.Founded}}</span></div>
+      <div class="kv-row"><span class="k">Remote</span><span class="v">{{.Research.Remote}}</span></div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Stability</h3>
+      <span class="badge badge-stability {{.Research.StabilityRating}}">{{.Research.StabilityRating}}</span>
+      <p>{{.Research.StabilityNotes}}</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Compensation</h3>
+      <div class="salary-large">{{.Research.SalaryRange}}</div>
+      <div class="kv-row"><span class="k">Source</span><span class="v">{{.Research.SalarySource}}</span></div>
+      <div class="kv-row"><span class="k">Total Comp</span><span class="v">{{.Research.TotalComp}}</span></div>
+      <div class="kv-row"><span class="k">vs. Floor</span><span class="v salary {{.Research.VsFloorClass}}">{{.Research.VsFloor}}</span></div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Engineering Culture</h3>
+      <p>{{.Research.EngineeringCulture}}</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Tech Stack</h3>
+      <ul>
+        {{range .Research.TechStack}}
+        <li class="tag">{{.}}</li>
+        {{end}}
+      </ul>
+    </div>
+    {{else}}
+    <div class="sidebar-placeholder">
+      No company research available. Run /company-research {{.FitReport.Company}} for intel.
+    </div>
+    {{end}}
+  </div>
+</div>
+
+{{end}}

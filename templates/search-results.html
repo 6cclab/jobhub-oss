@@ -1,0 +1,330 @@
+<title>Job Search Results</title>
+<style>
+  :root {
+    --bg: #0f1114;
+    --surface: #181b20;
+    --surface-hover: #1e2228;
+    --border: #2a2e35;
+    --text: #e0e2e6;
+    --text-muted: #8b909a;
+    --accent: #5b9cf5;
+    --accent-dim: #3d6db3;
+    --green: #4aba87;
+    --amber: #d4a54a;
+    --tag-bg: #232730;
+    --tag-text: #9ba3b2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'Fira Code', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    padding: 2rem 1.5rem;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--accent);
+    margin-bottom: 0.35rem;
+  }
+
+  .header .meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .stats {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1.25rem 0 0;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .stat .val {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat .label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .section {
+    margin-bottom: 2rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header h2 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.03em;
+  }
+
+  .section-header .count {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fit-badge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .fit-strong {
+    background: rgba(74, 186, 135, 0.15);
+    color: var(--green);
+  }
+
+  .fit-good {
+    background: rgba(212, 165, 74, 0.15);
+    color: var(--amber);
+  }
+
+  .job-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+  }
+
+  .job-table thead th {
+    text-align: left;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .job-table tbody tr {
+    border-bottom: 1px solid rgba(42, 46, 53, 0.5);
+    transition: background 0.1s;
+  }
+
+  .job-table tbody tr:hover {
+    background: var(--surface-hover);
+  }
+
+  .job-table td {
+    padding: 0.55rem 0.6rem;
+    vertical-align: top;
+  }
+
+  .job-table a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .job-table a:hover {
+    text-decoration: underline;
+  }
+
+  .loc {
+    color: var(--text-muted);
+    font-size: 0.68rem;
+  }
+
+  .loc.remote { color: var(--green); }
+
+  .salary {
+    font-size: 0.68rem;
+    color: var(--green);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .salary.undisclosed {
+    color: var(--text-muted);
+  }
+
+  .salary.below-floor {
+    color: var(--amber);
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-size: 0.58rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    margin-right: 0.25rem;
+    letter-spacing: 0.02em;
+  }
+
+  .company-col {
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .note {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: var(--surface);
+    border-left: 2px solid var(--accent-dim);
+  }
+
+  @media (max-width: 700px) {
+    body { padding: 1rem; }
+    .stats { gap: 1rem; }
+    .job-table { font-size: 0.65rem; }
+    .job-table td, .job-table th { padding: 0.4rem; }
+  }
+</style>
+
+<!--
+  TEMPLATE INSTRUCTIONS
+
+  This is the canonical search results artifact template. When generating search results,
+  copy the full CSS above into a <style> tag, then populate the structure below.
+
+  STRUCTURE:
+  1. Header: page title, meta line (board count, date, location filter), stats row
+  2. Filter chips: "All" + relevant domain/level/location filters. Mark the active one.
+     Use data attributes on each <tr> for JS filtering: data-loc, data-level, data-domain
+  3. Fit groups: group results by alignment level
+     - "Strong Fit" (.fit-strong / HIGH ALIGNMENT) — direct domain match
+     - "Good Fit" (.fit-good / SOLID ALIGNMENT) — adjacent/transferable
+     - Omit groups with no results
+  4. Each result row: Company | Role (linked) | Location | Salary | Tags
+     Salary column uses .salary class, .salary.undisclosed for "—", .salary.below-floor for ranges under $185k
+  5. Footer note with total raw count and how to proceed
+
+  FILTER JS:
+  Include this script block for interactive filtering:
+-->
+
+<!--
+<div class="header">
+  <h1>Job Search Results</h1>
+  <div class="meta">Scanned {{BOARD_COUNT}} Greenhouse boards &middot; {{DATE}} &middot; {{LOCATION_FILTER}}</div>
+  <div class="stats">
+    <div class="stat"><span class="val">{{BOARD_COUNT}}</span><span class="label">Boards scanned</span></div>
+    <div class="stat"><span class="val">{{TOP_PICKS}}</span><span class="label">Top picks</span></div>
+    <div class="stat"><span class="val">{{COMPANY_COUNT}}</span><span class="label">Companies</span></div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterJobs('all')">All</button>
+  <button class="filter-btn" onclick="filterJobs('remote')">Remote only</button>
+  <button class="filter-btn" onclick="filterJobs('staff')">Staff+</button>
+  <button class="filter-btn" onclick="filterJobs('platform')">Platform / DX</button>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <h2>Strong Fit</h2>
+    <span class="fit-badge fit-strong">high alignment</span>
+    <span class="count">— roles that directly map to your identity, platform, DX, observability, or full-stack ownership experience</span>
+  </div>
+  <div class="table-wrap">
+    <table class="job-table">
+      <thead><tr><th>Company</th><th>Role</th><th>Location</th><th>Salary</th><th>Tags</th></tr></thead>
+      <tbody>
+        <tr data-loc="remote" data-level="staff" data-domain="platform">
+          <td class="company-col">{{COMPANY}}</td>
+          <td><a href="{{URL}}" target="_blank">{{ROLE}}</a></td>
+          <td><span class="loc remote">{{LOCATION}}</span></td>
+          <td><span class="salary">{{SALARY}}</span></td>
+          <td><span class="tag">{{TAG}}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="note">
+  Full raw results: {{RAW_COUNT}}+ total matches across all boards. This view is curated to the ~{{TOP_PICKS}} roles with strongest alignment. Paste any job URL to get a fit report and tailored resume.
+</div>
+
+<script>
+  function filterJobs(type) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.job-table tbody tr').forEach(row => {
+      const loc = row.dataset.loc;
+      const level = row.dataset.level;
+      const domain = row.dataset.domain;
+      let show = true;
+      if (type === 'remote') show = loc === 'remote';
+      if (type === 'staff') show = level === 'staff';
+      if (type === 'platform') show = domain === 'platform';
+      row.style.display = show ? '' : 'none';
+    });
+  }
+</script>
+-->

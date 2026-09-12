@@ -1,0 +1,94 @@
+{{define "title"}}Boards — JobHub{{end}}
+{{define "content"}}
+
+<div class="section-title">Greenhouse <span class="count">({{len .Greenhouse}})</span></div>
+{{if .Greenhouse}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Slug</th>
+        <th>Name</th>
+        <th>Tags</th>
+        <th>Status</th>
+        <th>Last Probed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Greenhouse}}
+      <tr>
+        <td>{{.Slug}}</td>
+        <td>{{.Name}}</td>
+        <td>{{range .Tags}}<span class="tag">{{.}}</span>{{end}}</td>
+        <td><span class="badge badge-stability {{.StatusClass}}">{{.Status}}</span></td>
+        <td>{{formatDate .LastProbed}}</td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No Greenhouse boards tracked.</div>
+{{end}}
+
+<div class="section-title">Lever <span class="count">({{len .Lever}})</span></div>
+{{if .Lever}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Slug</th>
+        <th>Name</th>
+        <th>Tags</th>
+        <th>Status</th>
+        <th>Last Probed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Lever}}
+      <tr>
+        <td>{{.Slug}}</td>
+        <td>{{.Name}}</td>
+        <td>{{range .Tags}}<span class="tag">{{.}}</span>{{end}}</td>
+        <td><span class="badge badge-stability {{.StatusClass}}">{{.Status}}</span></td>
+        <td>{{formatDate .LastProbed}}</td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No Lever boards tracked.</div>
+{{end}}
+
+<div class="section-title">Ashby <span class="count">({{len .Ashby}})</span></div>
+{{if .Ashby}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Slug</th>
+        <th>Name</th>
+        <th>Tags</th>
+        <th>Status</th>
+        <th>Last Probed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Ashby}}
+      <tr>
+        <td>{{.Slug}}</td>
+        <td>{{.Name}}</td>
+        <td>{{range .Tags}}<span class="tag">{{.}}</span>{{end}}</td>
+        <td><span class="badge badge-stability {{.StatusClass}}">{{.Status}}</span></td>
+        <td>{{formatDate .LastProbed}}</td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No Ashby boards tracked.</div>
+{{end}}
+
+{{end}}

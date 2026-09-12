@@ -1,0 +1,9 @@
+bin/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# compiled helper binaries — build them, do not commit them
+/backfill
+/migrate-data

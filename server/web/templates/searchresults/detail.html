@@ -1,0 +1,102 @@
+{{define "title"}}Job Search Results — JobHub{{end}}
+{{define "content"}}
+
+<div class="hero">
+  <div class="eyebrow">Job Search Results</div>
+  <h1>Batch {{formatDate .Batch.Date}}</h1>
+  <div class="meta">
+    <span>{{.Batch.BoardsScanned}} boards scanned</span>
+    <span>{{formatDate .Batch.Date}}</span>
+    {{if .Batch.LocationFilter}}<span>Location: {{.Batch.LocationFilter}}</span>{{end}}
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-value">{{.Batch.BoardsScanned}}</div>
+    <div class="stat-label">Boards Scanned</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{.Batch.TopPicks}}</div>
+    <div class="stat-label">Top Picks</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{.Batch.CompanyCount}}</div>
+    <div class="stat-label">Companies</div>
+  </div>
+</div>
+
+<div class="filter-chips">
+  <button class="filter-chip active"
+    hx-get="/search-results/{{.Batch.ID}}/rows?tier=all&loc=all"
+    hx-target="#results-tbody" hx-swap="innerHTML">All</button>
+  <button class="filter-chip"
+    hx-get="/search-results/{{.Batch.ID}}/rows?tier=all&loc=remote"
+    hx-target="#results-tbody" hx-swap="innerHTML">Remote only</button>
+  <button class="filter-chip"
+    hx-get="/search-results/{{.Batch.ID}}/rows?tier=staff&loc=all"
+    hx-target="#results-tbody" hx-swap="innerHTML">Staff+</button>
+  <button class="filter-chip"
+    hx-get="/search-results/{{.Batch.ID}}/rows?tier=platform&loc=all"
+    hx-target="#results-tbody" hx-swap="innerHTML">Platform/DX</button>
+</div>
+
+<div class="section-title">
+  <span class="badge badge-verdict strong">High Alignment</span>
+  Strong Fit <span class="count">({{len .StrongFit}})</span>
+</div>
+{{if .StrongFit}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Location</th>
+        <th>Salary</th>
+        <th>Tags</th>
+      </tr>
+    </thead>
+    <tbody id="results-tbody">
+      {{range .StrongFit}}
+      {{template "partials/_search_result_row.html" .}}
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No strong fit results.</div>
+{{end}}
+
+<div class="section-title">
+  <span class="badge badge-verdict worth">Solid Alignment</span>
+  Good Fit <span class="count">({{len .GoodFit}})</span>
+</div>
+{{if .GoodFit}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Location</th>
+        <th>Salary</th>
+        <th>Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .GoodFit}}
+      {{template "partials/_search_result_row.html" .}}
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No good fit results.</div>
+{{end}}
+
+<footer class="page-footer">
+  Results generated from {{.Batch.BoardsScanned}} boards on {{formatDate .Batch.Date}}. Filters apply client-side via HTMX partial swap.
+</footer>
+
+{{end}}

@@ -1,0 +1,31 @@
+{{define "partials/_application_row.html"}}
+<tr id="application-row-{{.ID}}">
+  <td>{{.Company}}</td>
+  <td>{{.Role}}</td>
+  <td>{{.Source}}</td>
+  <td>
+    <select class="status-select"
+      hx-patch="/api/applications/{{.ID}}"
+      hx-target="closest tr"
+      hx-swap="outerHTML"
+      name="status">
+      <option value="applied" {{if eq .Status "applied"}}selected{{end}}>Applied</option>
+      <option value="phone_screen" {{if eq .Status "phone_screen"}}selected{{end}}>Phone Screen</option>
+      <option value="onsite" {{if eq .Status "onsite"}}selected{{end}}>Onsite</option>
+      <option value="offer" {{if eq .Status "offer"}}selected{{end}}>Offer</option>
+      <option value="rejected" {{if eq .Status "rejected"}}selected{{end}}>Rejected</option>
+      <option value="ghosted" {{if eq .Status "ghosted"}}selected{{end}}>Ghosted</option>
+      <option value="withdrawn" {{if eq .Status "withdrawn"}}selected{{end}}>Withdrawn</option>
+    </select>
+  </td>
+  <td>{{formatDate .AppliedDate}}</td>
+  <td>
+    {{if .ResumePath}}
+    <a href="{{.ResumePath}}" download>Download</a>
+    {{else}}
+    <span class="tag">none</span>
+    {{end}}
+  </td>
+  <td>{{.Notes}}</td>
+</tr>
+{{end}}

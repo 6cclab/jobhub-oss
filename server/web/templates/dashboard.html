@@ -1,0 +1,79 @@
+{{define "title"}}Dashboard — JobHub{{end}}
+{{define "content"}}
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-value">{{.FitReportCount}}</div>
+    <div class="stat-label">Fit Reports</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{.ApplicationCount}}</div>
+    <div class="stat-label">Applications</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{.TrackedBoardCount}}</div>
+    <div class="stat-label">Tracked Boards</div>
+  </div>
+</div>
+
+<div class="section-title">Recent Fit Reports <span class="count">(last 5)</span></div>
+{{if .RecentFitReports}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Verdict</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .RecentFitReports}}
+      <tr>
+        <td>{{.Company}}</td>
+        <td>{{.Role}}</td>
+        <td><span class="badge badge-verdict {{.Verdict}}">{{.Verdict}}</span></td>
+        <td>{{formatDate .Date}}</td>
+        <td><a href="/fit-reports/{{.ID}}">View →</a></td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No fit reports yet.</div>
+{{end}}
+
+<div class="section-title">Recent Applications <span class="count">(last 5)</span></div>
+{{if .RecentApplications}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .RecentApplications}}
+      <tr>
+        <td>{{.Company}}</td>
+        <td>{{.Role}}</td>
+        <td><span class="badge badge-stability {{.Status}}">{{.Status}}</span></td>
+        <td>{{formatDate .AppliedDate}}</td>
+        <td><a href="/applications/{{.ID}}">View →</a></td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{else}}
+<div class="empty-state">No applications yet.</div>
+{{end}}
+
+{{end}}

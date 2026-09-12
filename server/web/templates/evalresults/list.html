@@ -1,0 +1,107 @@
+{{define "title"}}Eval Results — JobHub{{end}}
+{{define "content"}}
+
+{{if .Groups}}
+<div class="eval-trends">
+  <div class="section-title">Quality Trends</div>
+  <div class="trend-row">
+    <div class="trend-card">
+      <div class="trend-title">Verdict Distribution</div>
+      <div class="trend-bars">
+        {{if .VerdictCounts.strong}}<div class="trend-bar-row"><span class="trend-label">Strong</span><div class="trend-bar-track"><div class="trend-bar-fill verdict-strong" style="width:{{.VerdictPct.strong}}%"></div></div><span class="trend-count">{{.VerdictCounts.strong}}</span></div>{{end}}
+        {{if .VerdictCounts.acceptable}}<div class="trend-bar-row"><span class="trend-label">Acceptable</span><div class="trend-bar-track"><div class="trend-bar-fill verdict-acceptable" style="width:{{.VerdictPct.acceptable}}%"></div></div><span class="trend-count">{{.VerdictCounts.acceptable}}</span></div>{{end}}
+        {{if .VerdictCounts.needs_rework}}<div class="trend-bar-row"><span class="trend-label">Needs Rework</span><div class="trend-bar-track"><div class="trend-bar-fill verdict-needs-rework" style="width:{{.VerdictPct.needs_rework}}%"></div></div><span class="trend-count">{{.VerdictCounts.needs_rework}}</span></div>{{end}}
+        {{if .VerdictCounts.critical}}<div class="trend-bar-row"><span class="trend-label">Critical</span><div class="trend-bar-track"><div class="trend-bar-fill verdict-critical" style="width:{{.VerdictPct.critical}}%"></div></div><span class="trend-count">{{.VerdictCounts.critical}}</span></div>{{end}}
+      </div>
+    </div>
+    <div class="trend-card">
+      <div class="trend-title">Dimension Health</div>
+      <div class="dim-grid">
+        {{range .DimensionStats}}
+        <div class="dim-row">
+          <span class="dim-label">{{.Name}}</span>
+          <div class="dim-pills">
+            <span class="dim-pill pass" title="pass">{{.Pass}}</span>
+            <span class="dim-pill warn" title="warn">{{.Warn}}</span>
+            <span class="dim-pill fail" title="fail">{{.Fail}}</span>
+          </div>
+        </div>
+        {{end}}
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}
+
+<div class="section-title">Eval Results <span class="count">({{.TotalResults}} across {{len .Groups}} applications)</span></div>
+
+{{if .Groups}}
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Company</th>
+        <th>Role</th>
+        <th>Verdict</th>
+        <th>Keywords</th>
+        <th>Gap-Fill</th>
+        <th>Style</th>
+        <th>Skills</th>
+        <th>Mode</th>
+        <th>Date</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range $i, $g := .Groups}}
+      <tr class="eval-group-latest">
+        <td class="eval-toggle-cell">
+          {{if $g.History}}<button class="eval-toggle-btn" data-group="{{$i}}" aria-label="Toggle history">&#9654;</button>{{end}}
+        </td>
+        <td>{{$g.Latest.Company}}</td>
+        <td>{{$g.Latest.RoleTitle}}</td>
+        <td><span class="badge badge-eval {{$g.Latest.Verdict}}">{{$g.Latest.Verdict}}</span></td>
+        <td><span class="badge badge-score {{$g.Latest.KeywordScore}}">{{$g.Latest.KeywordScore}}</span></td>
+        <td><span class="badge badge-score {{$g.Latest.GapFillScore}}">{{$g.Latest.GapFillScore}}</span></td>
+        <td><span class="badge badge-score {{$g.Latest.StyleScore}}">{{$g.Latest.StyleScore}}</span></td>
+        <td><span class="badge badge-score {{$g.Latest.SkillsScore}}">{{$g.Latest.SkillsScore}}</span></td>
+        <td class="text-dim">{{$g.Latest.EvalMode}}</td>
+        <td>{{formatDate $g.Latest.CreatedAt}}</td>
+        <td><a href="/eval-results/{{$g.Latest.ID}}">View &rarr;</a></td>
+      </tr>
+      {{range $g.History}}
+      <tr class="eval-history-row" data-group="{{$i}}" style="display:none">
+        <td></td>
+        <td class="text-dim">&hookleftarrow; #{{.AttemptNumber}}</td>
+        <td class="text-dim">{{.RoleTitle}}</td>
+        <td><span class="badge badge-eval {{.Verdict}}">{{.Verdict}}</span></td>
+        <td><span class="badge badge-score {{.KeywordScore}}">{{.KeywordScore}}</span></td>
+        <td><span class="badge badge-score {{.GapFillScore}}">{{.GapFillScore}}</span></td>
+        <td><span class="badge badge-score {{.StyleScore}}">{{.StyleScore}}</span></td>
+        <td><span class="badge badge-score {{.SkillsScore}}">{{.SkillsScore}}</span></td>
+        <td class="text-dim">{{.EvalMode}}</td>
+        <td>{{formatDate .CreatedAt}}</td>
+        <td><a href="/eval-results/{{.ID}}">View &rarr;</a></td>
+      </tr>
+      {{end}}
+      {{end}}
+    </tbody>
+  </table>
+</div>
+
+<script>
+document.querySelectorAll('.eval-toggle-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var group = btn.dataset.group;
+    var rows = document.querySelectorAll('.eval-history-row[data-group="' + group + '"]');
+    var expanded = btn.classList.toggle('expanded');
+    rows.forEach(function(r) { r.style.display = expanded ? '' : 'none'; });
+  });
+});
+</script>
+{{else}}
+<div class="empty-state">No eval results yet. Run <code>/job-eval</code> to evaluate a resume.</div>
+{{end}}
+
+{{end}}

@@ -1,0 +1,110 @@
+{{define "title"}}Compare: {{.Company}} — {{.RoleTitle}} — JobHub{{end}}
+{{define "content"}}
+
+<div class="hero">
+  <div class="eyebrow">Side-by-Side Comparison</div>
+  <h1>{{.RoleTitle}}</h1>
+  <div class="company">{{.Company}} — {{len .Evals}} eval{{if ne (len .Evals) 1}}s{{end}}</div>
+</div>
+
+{{if ge (len .Evals) 2}}
+<div class="compare-grid">
+  <div class="compare-header">
+    <div class="compare-label"></div>
+    {{range .Evals}}
+    <div class="compare-col-header">
+      <span class="badge badge-eval {{.Verdict}}">{{.Verdict}}</span>
+      <div class="compare-date">{{formatDate .CreatedAt}}</div>
+      <div class="compare-meta">#{{.AttemptNumber}} · {{.EvalMode}}</div>
+    </div>
+    {{end}}
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-label">Keywords</div>
+    {{range .Evals}}
+    <div class="compare-cell"><span class="badge badge-score {{.KeywordScore}}">{{.KeywordScore}}</span></div>
+    {{end}}
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-label">Gap-Fill</div>
+    {{range .Evals}}
+    <div class="compare-cell"><span class="badge badge-score {{.GapFillScore}}">{{.GapFillScore}}</span></div>
+    {{end}}
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-label">Style</div>
+    {{range .Evals}}
+    <div class="compare-cell"><span class="badge badge-score {{.StyleScore}}">{{.StyleScore}}</span></div>
+    {{end}}
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-label">Skills</div>
+    {{range .Evals}}
+    <div class="compare-cell"><span class="badge badge-score {{.SkillsScore}}">{{.SkillsScore}}</span></div>
+    {{end}}
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-label">Structural</div>
+    {{range .Evals}}
+    <div class="compare-cell"><span class="badge badge-score {{.StructuralScore}}">{{.StructuralScore}}</span></div>
+    {{end}}
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-label">Issue</div>
+    {{range .Evals}}
+    <div class="compare-cell compare-issue">{{if .PrimaryIssue}}{{.PrimaryIssue}}{{else}}—{{end}}</div>
+    {{end}}
+  </div>
+
+  <div class="compare-row">
+    <div class="compare-label"></div>
+    {{range .Evals}}
+    <div class="compare-cell"><a href="/eval-results/{{.ID}}">Full detail →</a></div>
+    {{end}}
+  </div>
+</div>
+
+{{if .TermComparison}}
+<div class="section-title">Keyword Coverage Comparison</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        {{range .Evals}}
+        <th>{{formatDate .CreatedAt}}</th>
+        {{end}}
+      </tr>
+    </thead>
+    <tbody>
+      {{range .TermComparison}}
+      <tr>
+        <td>{{.Term}}</td>
+        {{range .Statuses}}
+        <td>
+          {{if eq . "covered"}}<span class="eval-status covered">✅</span>
+          {{else if eq . "skills_only"}}<span class="eval-status skills-only">⚠️</span>
+          {{else if eq . "missing"}}<span class="eval-status missing">❌</span>
+          {{else}}<span class="text-dim">—</span>{{end}}
+        </td>
+        {{end}}
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{end}}
+
+{{else if eq (len .Evals) 1}}
+<div class="empty-state">Only one eval for this role. Run <code>/job-eval {{lower .Company}}</code> again after updating the resume to see a comparison.</div>
+{{else}}
+<div class="empty-state">No evals found for this company/role.</div>
+{{end}}
+
+{{end}}

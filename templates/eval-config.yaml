@@ -1,0 +1,59 @@
+# Eval engine configuration — loaded by the JobHub server at startup.
+# Edit these lists to customize how the eval engine scores your resumes.
+
+# Technologies that are never flagged as "unmatched padding" in your skills section.
+# These are table-stakes skills any engineer might list regardless of the posting.
+common_stack_skills:
+  - typescript
+  - javascript
+  - python
+  - go
+  - node.js
+  - ruby
+  - java
+  - rust
+  - react
+  - angular
+  - vue
+  - css
+  - tailwind
+  - html
+  - postgresql
+  - postgres
+  - mysql
+  - mongodb
+  - redis
+  - graphql
+  - rest
+  - grpc
+  - aws
+  - gcp
+  - azure
+  - docker
+  - kubernetes
+  - k8s
+  - terraform
+  - ci/cd
+  - github actions
+  - datadog
+  - grafana
+  - prometheus
+
+# Phrases that should never appear in a resume. The eval engine flags these as style violations.
+banned_phrases:
+  - "track record of"
+  - "proven ability to"
+  - "demonstrated experience in"
+  - "leveraging"
+  - "leverage"
+  - "synergies"
+  - "passionate about"
+  - "also builds"
+  - "results-driven"
+  - "self-motivated"
+  - "detail-oriented"
+
+# Your own unverified metrics — claims you've used in resumes that haven't been confirmed.
+# The eval engine flags these if they appear, to remind you to verify before submitting.
+# Leave empty if you don't have any, or add your own.
+unverified_metrics: []

@@ -1,0 +1,131 @@
+{{define "title"}}Eval: {{.Result.Company}} — {{.Result.RoleTitle}} — JobHub{{end}}
+{{define "content"}}
+
+<div class="hero">
+  <div class="eyebrow">Eval Result</div>
+  <h1>{{.Result.RoleTitle}}</h1>
+  <div class="company">{{.Result.Company}}</div>
+  <div class="meta">
+    <span>{{.Result.EvalMode}} mode</span>
+    {{if .Result.PostingURL}}<span><a href="{{.Result.PostingURL}}" target="_blank" rel="noopener">Posting →</a></span>{{end}}
+    <span>{{formatDate .Result.CreatedAt}}</span>
+  </div>
+</div>
+
+<div class="verdict-bar">
+  <span class="badge badge-eval {{.Result.Verdict}}">{{.Result.Verdict}}</span>
+  {{if .Result.PrimaryIssue}}<span class="summary">{{.Result.PrimaryIssue}}</span>{{end}}
+</div>
+
+<div class="eval-scores">
+  <div class="score-card">
+    <div class="score-label">Keywords</div>
+    <span class="badge badge-score {{.Result.KeywordScore}}">{{.Result.KeywordScore}}</span>
+    <div class="score-detail">{{.KeywordPct}}% coverage ({{.KeywordCovered}}/{{.KeywordTotal}})</div>
+  </div>
+  <div class="score-card">
+    <div class="score-label">Gap-Fill</div>
+    <span class="badge badge-score {{.Result.GapFillScore}}">{{.Result.GapFillScore}}</span>
+    <div class="score-detail">{{.GapFillFailures}} failure{{if ne .GapFillFailures 1}}s{{end}}</div>
+  </div>
+  <div class="score-card">
+    <div class="score-label">Style</div>
+    <span class="badge badge-score {{.Result.StyleScore}}">{{.Result.StyleScore}}</span>
+  </div>
+  <div class="score-card">
+    <div class="score-label">Skills</div>
+    <span class="badge badge-score {{.Result.SkillsScore}}">{{.Result.SkillsScore}}</span>
+  </div>
+  <div class="score-card">
+    <div class="score-label">Structural</div>
+    <span class="badge badge-score {{.Result.StructuralScore}}">{{.Result.StructuralScore}}</span>
+  </div>
+  <div class="score-card">
+    <div class="score-label">AI Tells</div>
+    <span class="badge badge-score {{.Result.AITellsScore}}">{{.Result.AITellsScore}}</span>
+    <div class="score-detail">weight {{.AITellScore}}{{if .AITellCV}} &middot; CV {{.AITellCV}}{{end}}</div>
+  </div>
+</div>
+
+{{if .KeywordTerms}}
+<div class="section-title">Keyword Diff</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Category</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Gap-Fill</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .KeywordTerms}}
+      <tr>
+        <td>{{.Term}}</td>
+        <td class="text-dim">{{.Category}}</td>
+        <td>{{if eq .Priority "top3"}}<span class="badge badge-score fail">top3</span>{{else}}<span class="text-dim">standard</span>{{end}}</td>
+        <td>
+          {{if eq .Status "covered"}}<span class="eval-status covered">✅ covered</span>
+          {{else if eq .Status "skills_only"}}<span class="eval-status skills-only">⚠️ skills only</span>
+          {{else}}<span class="eval-status missing">❌ missing</span>{{end}}
+        </td>
+        <td>
+          {{if eq .Verdict "gap_fill_failure"}}<span class="eval-status gap-fail">FAIL — {{.GapFillProject}}</span>
+          {{else if eq .Verdict "genuine_gap"}}<span class="text-dim">genuine gap</span>
+          {{else}}—{{end}}
+        </td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{end}}
+
+{{if .GapFillDetails}}
+<div class="section-title">Gap-Fill Failures</div>
+<div class="eval-gap-fills">
+  {{range .GapFillDetails}}
+  <div class="signal-card signal-flag">
+    <div class="signal-req">{{.Term}}</div>
+    <div class="signal-evidence">Project <strong>{{.Project}}</strong> fills this gap but was not used on the resume.</div>
+    {{if eq .Priority "top3"}}<span class="badge badge-score fail">top-3 requirement</span>{{end}}
+  </div>
+  {{end}}
+</div>
+{{end}}
+
+{{if .AITells}}
+<div class="section-title">AI-Sounding Prose</div>
+<p class="note">These are stylistic markers, not proof of authorship. They matter because
+recruiters and ATS screens increasingly flag them &mdash; the cost is the same regardless of
+who wrote the line.</p>
+<div class="eval-style-issues">
+  {{range .AITells}}
+  <div class="signal-card signal-gap">
+    <div class="signal-requirement">{{.Label}}{{if .Text}}: &ldquo;{{.Text}}&rdquo;{{end}}</div>
+    <div class="signal-evidence">{{.Detail}}</div>
+  </div>
+  {{end}}
+</div>
+{{end}}
+
+{{if .StyleIssues}}
+<div class="section-title">Style Issues</div>
+<div class="eval-style-issues">
+  {{range .StyleIssues}}
+  <div class="signal-card signal-gap">
+    <div class="signal-evidence">{{.}}</div>
+  </div>
+  {{end}}
+</div>
+{{end}}
+
+<footer class="page-footer">
+  <div>Resume: <code>{{.Result.ResumeFile}}</code></div>
+  <div>Attempt #{{.Result.AttemptNumber}}</div>
+  <div><a href="/eval-results/compare?company={{.Result.Company}}&role={{.Result.RoleTitle}}">Compare all evals for this role →</a></div>
+</footer>
+
+{{end}}
