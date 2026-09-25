@@ -1,0 +1,593 @@
+<title>Fit Report</title>
+<style>
+  @font-face {
+    font-family: 'Display';
+    src: local('SF Mono'), local('Menlo'), local('Monaco'), local('Consolas');
+  }
+  @font-face {
+    font-family: 'Body';
+    src: local('Georgia'), local('Times New Roman');
+  }
+
+  :root {
+    --bg: #141821;
+    --surface: #1c2130;
+    --surface-raised: #232939;
+    --border: #2a3147;
+    --text-primary: #e2e0db;
+    --text-secondary: #8891a5;
+    --text-dim: #5c6478;
+    --match: #2d9c83;
+    --match-bg: rgba(45, 156, 131, 0.08);
+    --match-border: rgba(45, 156, 131, 0.2);
+    --gap: #d4983b;
+    --gap-bg: rgba(212, 152, 59, 0.08);
+    --gap-border: rgba(212, 152, 59, 0.2);
+    --flag: #c95c50;
+    --flag-bg: rgba(201, 92, 80, 0.08);
+    --flag-border: rgba(201, 92, 80, 0.2);
+    --accent: #5b8dd9;
+    --sidebar-accent: #7c6fbf;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: Body, Georgia, serif;
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+    padding: 32px 20px 64px;
+  }
+
+  /* ── Layout wrapper ── */
+  .report-layout {
+    max-width: 1020px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .report {
+    min-width: 0;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 28px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .hero-eyebrow {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .hero h1 {
+    font-family: Body, Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    text-wrap: balance;
+  }
+
+  .hero .company {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+
+  .hero .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .hero .meta span::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    margin-right: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  /* ── Verdict ── */
+  .verdict-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 28px;
+  }
+
+  .verdict-badge {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .verdict-badge.strong {
+    background: var(--match);
+    color: #0d1117;
+  }
+  .verdict-badge.worth {
+    background: var(--gap);
+    color: #0d1117;
+  }
+  .verdict-badge.stretch {
+    background: var(--flag);
+    color: #fff;
+  }
+  .verdict-badge.skip {
+    background: var(--text-dim);
+    color: var(--bg);
+  }
+
+  .verdict-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  /* ── Sections ── */
+  .section {
+    margin-bottom: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .section-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .section-icon.match { background: var(--match-bg); color: var(--match); border: 1px solid var(--match-border); }
+  .section-icon.gap { background: var(--gap-bg); color: var(--gap); border: 1px solid var(--gap-border); }
+  .section-icon.flag { background: var(--flag-bg); color: var(--flag); border: 1px solid var(--flag-border); }
+
+  .section-title {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .section-count {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  /* ── Signal items ── */
+  .signal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .signal {
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .signal.match-signal { border-left: 3px solid var(--match); }
+  .signal.gap-signal { border-left: 3px solid var(--gap); }
+  .signal.flag-signal { border-left: 3px solid var(--flag); }
+
+  .signal-requirement {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .signal-evidence {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .signal-source {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  /* ── Why Apply ── */
+  .why-apply {
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 28px;
+    border-top: 2px solid var(--accent);
+  }
+
+  .why-apply h3 {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .why-apply p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .why-apply p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Footer ── */
+  .report-footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .empty-section {
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 1px dashed var(--border);
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* ── Sidebar: Company Intel ── */
+  .sidebar {
+    position: sticky;
+    top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sidebar-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .sidebar-card-header {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sidebar-accent);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    font-size: 12px;
+  }
+
+  .sidebar-label {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .sidebar-value {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    color: var(--text-primary);
+    text-align: right;
+  }
+
+  .sidebar-value.positive { color: var(--match); }
+  .sidebar-value.caution { color: var(--gap); }
+  .sidebar-value.negative { color: var(--flag); }
+
+  .stability-badge {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .stability-badge.strong { background: rgba(45, 156, 131, 0.15); color: var(--match); }
+  .stability-badge.stable { background: rgba(91, 141, 217, 0.15); color: var(--accent); }
+  .stability-badge.caution { background: rgba(212, 152, 59, 0.15); color: var(--gap); }
+  .stability-badge.avoid { background: rgba(201, 92, 80, 0.15); color: var(--flag); }
+
+  .sidebar-text {
+    font-family: Body, Georgia, serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .sidebar-text p {
+    margin-bottom: 6px;
+  }
+
+  .sidebar-text p:last-child { margin-bottom: 0; }
+
+  .salary-range {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--match);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+  }
+
+  .salary-source {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .sidebar-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .sidebar-list li {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(42, 49, 71, 0.4);
+  }
+
+  .sidebar-list li:last-child { border-bottom: none; }
+
+  .no-research {
+    font-family: Display, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 20px 16px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+  }
+
+  @media (max-width: 800px) {
+    .report-layout {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      position: static;
+      order: -1;
+    }
+    body { padding: 20px 14px 48px; }
+    .hero h1 { font-size: 22px; }
+    .hero .meta { gap: 10px; }
+    .verdict-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .report-footer { flex-direction: column; gap: 4px; }
+  }
+</style>
+
+<div class="report-layout">
+
+  <div class="report">
+
+    <div class="hero">
+      <div class="hero-eyebrow">Fit Report</div>
+      <h1>{{ROLE_TITLE}}</h1>
+      <div class="company">{{COMPANY}}</div>
+      <div class="meta">
+        <span>{{LOCATION}}</span>
+        <span>{{LEVEL}}</span>
+        <span>{{DATE}}</span>
+      </div>
+    </div>
+
+    <div class="verdict-bar">
+      <div class="verdict-badge {{VERDICT_CLASS}}">{{VERDICT_LABEL}}</div>
+      <div class="verdict-text">{{VERDICT_SUMMARY}}</div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon match">&#10003;</div>
+        <div class="section-title">Match Signals</div>
+        <div class="section-count">{{MATCH_COUNT}}</div>
+      </div>
+      <div class="signal-list">
+        {{MATCH_SIGNALS}}
+        <!--
+        <div class="signal match-signal">
+          <div class="signal-requirement">They want: [requirement from posting]</div>
+          <div class="signal-evidence">[How your experience maps to this]</div>
+          <div class="signal-source">Source: [which master resume bullet or section]</div>
+        </div>
+        -->
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon gap">!</div>
+        <div class="section-title">Gaps</div>
+        <div class="section-count">{{GAP_COUNT}}</div>
+      </div>
+      <div class="signal-list">
+        {{GAP_SIGNALS}}
+        <!--
+        <div class="signal gap-signal">
+          <div class="signal-requirement">They want: [requirement from posting]</div>
+          <div class="signal-evidence">[Honest assessment]</div>
+        </div>
+        -->
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon flag">&#10005;</div>
+        <div class="section-title">Red Flags</div>
+        <div class="section-count">{{FLAG_COUNT}}</div>
+      </div>
+      <div class="signal-list">
+        {{FLAG_SIGNALS}}
+        <!--
+        <div class="signal flag-signal">
+          <div class="signal-requirement">[What conflicts with preferences]</div>
+          <div class="signal-evidence">[Why this is a concern]</div>
+        </div>
+        -->
+      </div>
+    </div>
+
+    <div class="why-apply">
+      <h3>Why This Role</h3>
+      {{WHY_APPLY}}
+    </div>
+
+    <div class="report-footer">
+      <span>{{POSTING_URL}}</span>
+      <span>{{DATE}}</span>
+    </div>
+
+  </div>
+
+  <!--
+  SIDEBAR: Company Intel from /company-research
+  If research was run, populate the cards below.
+  If no research was run, show the .no-research placeholder instead.
+
+  When /company-research WAS run:
+
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">Company Overview</div>
+      <div class="sidebar-row">
+        <span class="sidebar-label">Stage</span>
+        <span class="sidebar-value">{{STAGE}}</span>
+      </div>
+      <div class="sidebar-row">
+        <span class="sidebar-label">Headcount</span>
+        <span class="sidebar-value">{{HEADCOUNT}}</span>
+      </div>
+      <div class="sidebar-row">
+        <span class="sidebar-label">Founded</span>
+        <span class="sidebar-value">{{FOUNDED}}</span>
+      </div>
+      <div class="sidebar-row">
+        <span class="sidebar-label">Remote</span>
+        <span class="sidebar-value {{REMOTE_CLASS}}">{{REMOTE}}</span>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">Stability</div>
+      <span class="stability-badge {{STABILITY_CLASS}}">{{STABILITY_VERDICT}}</span>
+      <div class="sidebar-text">
+        <p>{{STABILITY_NOTES}}</p>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">Compensation</div>
+      <div class="salary-range">{{SALARY_RANGE}}</div>
+      <div class="salary-source">{{SALARY_SOURCE}}</div>
+      <div class="sidebar-row" style="margin-top: 8px;">
+        <span class="sidebar-label">Total Comp</span>
+        <span class="sidebar-value">{{TOTAL_COMP}}</span>
+      </div>
+      <div class="sidebar-row">
+        <span class="sidebar-label">vs. Floor</span>
+        <span class="sidebar-value {{FLOOR_CLASS}}">{{FLOOR_COMPARISON}}</span>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">Engineering Culture</div>
+      <div class="sidebar-text">
+        <p>{{CULTURE_NOTES}}</p>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-card-header">Tech Stack</div>
+      <ul class="sidebar-list">
+        {{TECH_STACK_ITEMS}}
+      </ul>
+    </div>
+  </div>
+
+  When /company-research was NOT run:
+
+  <div class="sidebar">
+    <div class="no-research">
+      No company research available.<br>
+      Run /company-research {{COMPANY}} for intel.
+    </div>
+  </div>
+  -->
+
+</div>

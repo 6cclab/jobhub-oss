@@ -1,0 +1,46 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      # The funnel decides which roles are ever seen. Its cases are plain
+      # asserts with no test runner dependency, so run each file directly.
+      #
+      # triage_cases.py is excluded on purpose: it drives a local Ollama model,
+      # which no runner has. Run it by hand after every screen-profile.md edit --
+      # it is the only thing standing between a prompt edit and a silently
+      # narrower funnel.
+      - name: Run funnel cases
+        run: |
+          set -e
+          for f in scripts/*_cases.py; do
+            case "$f" in *triage_cases.py) echo "-- skip $f (needs Ollama)"; continue;; esac
+            echo "== $f"
+            python3 "$f"
+          done
+
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: eval/go.mod
+          cache-dependency-path: eval/go.sum
+
+      - name: Run eval engine tests
+        working-directory: eval
+        run: go test ./...
